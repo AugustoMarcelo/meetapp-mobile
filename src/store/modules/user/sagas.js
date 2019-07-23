@@ -1,5 +1,5 @@
+import { Alert } from 'react-native';
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
@@ -15,12 +15,11 @@ export function* updateProfile({ payload }) {
         );
 
         const response = yield call(api.put, 'users', profile);
-
-        toast.success('Profile updated!');
+        Alert.alert('Success', 'Profile updated!');
 
         yield put(updateProfileSuccess(response.data));
     } catch (error) {
-        toast.error('Profile update failed. Check your data.');
+        Alert.alert('Profile update failed', 'Check your data.');
         yield put(updateProfileFailure());
     }
 }

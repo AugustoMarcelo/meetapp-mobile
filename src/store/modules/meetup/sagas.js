@@ -1,7 +1,6 @@
+import { Alert } from 'react-native';
 import { takeLatest, call, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 
-import history from '~/services/history';
 import api from '~/services/api';
 
 export function* addMeetup({ payload }) {
@@ -16,9 +15,9 @@ export function* addMeetup({ payload }) {
             banner_id,
         });
 
-        history.push('/dashboard');
+        // history.push('/dashboard');
     } catch (error) {
-        toast.error('Failed. Check your data.');
+        Alert.alert('Failed', 'Check your data.');
     }
 }
 
@@ -28,11 +27,11 @@ export function* cancelMeetup({ payload }) {
 
         yield call(api.delete, `mymeetups/${id}`);
 
-        toast.success('Meetup was deleted.');
+        Alert.alert('Success', 'Meetup was deleted.');
 
-        history.push('/dashboard');
+        // history.push('/dashboard');
     } catch (error) {
-        toast.error('Delete meetup failed.');
+        Alert.alert('Failed', 'Delete meetup failed.');
     }
 }
 
@@ -48,11 +47,11 @@ export function* editMeetup({ payload }) {
             banner_id,
         });
 
-        toast.success('Meetup updated success!');
+        Alert.alert('Success', 'Meetup updated success!');
 
-        history.push(`/details/${id}`);
+        // history.push(`/details/${id}`);
     } catch (error) {
-        toast.error('Update meetup failed.');
+        Alert.alert('Failed', 'Update meetup failed.');
     }
 }
 

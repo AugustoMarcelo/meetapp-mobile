@@ -1,7 +1,6 @@
+import { Alert } from 'react-native';
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 
-import history from '~/services/history';
 import api from '~/services/api';
 
 import { signInSuccess, signFailure } from './actions';
@@ -21,9 +20,9 @@ export function* signIn({ payload }) {
 
         yield put(signInSuccess(token, user));
 
-        history.push('/dashboard');
+        // history.push('/dashboard');
     } catch (error) {
-        toast.error('Authentication Failed. Check your data.');
+        Alert.alert('Authentication Failed', 'Check your data.');
         yield put(signFailure());
     }
 }
@@ -38,9 +37,9 @@ export function* signUp({ payload }) {
             password,
         });
 
-        history.push('/');
+        // history.push('/');
     } catch (error) {
-        toast.error('Registration failed. Please, check your data.');
+        Alert.alert('Registration failed', 'Please, check your data.');
         yield put(signFailure());
     }
 }
@@ -56,7 +55,7 @@ export function setToken({ payload }) {
 }
 
 export function signOut() {
-    history.push('/');
+    // history.push('/');
 }
 
 export default all([
