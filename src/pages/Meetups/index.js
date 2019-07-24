@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
+import { format, subDays, addDays } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import api from '~/services/api';
 
 import logo from '~/assets/logo.png';
 
@@ -16,9 +19,43 @@ import {
     DateSelectorText,
 } from './styles';
 
-const data = [1, 2, 3, 4, 5];
-
 export default function Meetups() {
+    const [date, setDate] = useState(new Date());
+    const [page, setPage] = useState(1);
+    const [meetups, setMeetups] = useState([]);
+
+    const dateFormatted = useMemo(
+        () => format(date, "d 'de' MMMM", { locale: pt }),
+        [date]
+    );
+
+    const dateParamFormatted = useMemo(() => format(date, 'yyyy-MM-dd'), [
+        date,
+    ]);
+
+    useEffect(() => {
+        async function loadMeetups() {
+            const response = await api.get('meetups', {
+                params: {
+                    date: dateParamFormatted,
+                    page,
+                },
+            });
+
+            setMeetups(response.data);
+        }
+
+        loadMeetups();
+    }, [date, dateParamFormatted, page]);
+
+    function handlePrevDay() {
+        setDate(subDays(date, 1));
+    }
+
+    function handleNextDay() {
+        setDate(addDays(date, 1));
+    }
+
     return (
         <Background>
             <Header>
@@ -26,11 +63,11 @@ export default function Meetups() {
             </Header>
             <Container>
                 <DateSelector>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handlePrevDay}>
                         <Icon name="chevron-left" size={30} color="#fff" />
                     </TouchableOpacity>
-                    <DateSelectorText>31 de Maio</DateSelectorText>
-                    <TouchableOpacity>
+                    <DateSelectorText>{dateFormatted}</DateSelectorText>
+                    <TouchableOpacity onPress={handleNextDay}>
                         <Icon
                             name="keyboard-arrow-right"
                             size={30}
@@ -39,8 +76,8 @@ export default function Meetups() {
                     </TouchableOpacity>
                 </DateSelector>
                 <List
-                    data={data}
-                    keyExtractor={item => String(item)}
+                    data={meetups}
+                    keyExtractor={item => String(item.id)}
                     renderItem={({ item }) => <Meetup data={item} />}
                 />
             </Container>

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { parseISO, formatRelative } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import {
     Container,
@@ -11,27 +13,36 @@ import {
     SubscribeButton,
 } from './styles';
 
-export default function Meetup() {
+export default function Meetup({ data }) {
+    const dateFormatted = useMemo(() => {
+        return formatRelative(parseISO(data.date), new Date(), {
+            locale: pt,
+            addSuffix: true,
+        });
+    }, [data.date]);
+
     return (
         <Container>
             <Banner
                 source={{
-                    uri: 'https://camunda.com/img/events/meetup-example.jpg',
+                    uri: data.banner.url
+                        ? data.banner.url
+                        : 'https://camunda.com/img/events/meetup-example.jpg',
                 }}
             />
-            <Title>Meetup de react native</Title>
+            <Title>{data.title}</Title>
             <InfoContainer>
                 <Info>
                     <Icon name="event" size={18} color="#999" />
-                    <InfoText>24 de Junho, às 20h</InfoText>
+                    <InfoText>{dateFormatted}</InfoText>
                 </Info>
                 <Info>
                     <Icon name="place" size={18} color="#999" />
-                    <InfoText>Rua Guilherme Gembala, 260</InfoText>
+                    <InfoText>{data.location}</InfoText>
                 </Info>
                 <Info>
                     <Icon name="person" size={18} color="#999" />
-                    <InfoText>Organizador: Diego Fernandes</InfoText>
+                    <InfoText>Organizador: {data.user.name}</InfoText>
                 </Info>
             </InfoContainer>
             <SubscribeButton>Subscribe</SubscribeButton>
