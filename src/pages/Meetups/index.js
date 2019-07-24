@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Text, Image, TouchableOpacity } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
@@ -14,6 +14,7 @@ import Meetup from '~/components/Meetup';
 import {
     Header,
     Container,
+    EmptyContainer,
     List,
     DateSelector,
     DateSelectorText,
@@ -75,11 +76,18 @@ export default function Meetups() {
                         />
                     </TouchableOpacity>
                 </DateSelector>
-                <List
-                    data={meetups}
-                    keyExtractor={item => String(item.id)}
-                    renderItem={({ item }) => <Meetup data={item} />}
-                />
+                {meetups.length ? (
+                    <List
+                        data={meetups}
+                        keyExtractor={item => String(item.id)}
+                        renderItem={({ item }) => <Meetup data={item} />}
+                    />
+                ) : (
+                    <EmptyContainer>
+                        <Icon name="sentiment-dissatisfied" size={20} color="#999" style={{ marginRight: 5 }} />
+                        <Text>No meetups found on this date</Text>
+                    </EmptyContainer>
+                )}
             </Container>
         </Background>
     );
