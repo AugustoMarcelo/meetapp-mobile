@@ -13,7 +13,7 @@ import {
     SubscribeButton,
 } from './styles';
 
-export default function Meetup({ data }) {
+export default function Meetup({ data, onSubscribe }) {
     const dateFormatted = useMemo(() => {
         return formatRelative(parseISO(data.date), new Date(), {
             locale: pt,
@@ -45,7 +45,7 @@ export default function Meetup({ data }) {
                     <InfoText>Organizador: {data.user.name}</InfoText>
                 </Info>
             </InfoContainer>
-            <SubscribeButton>Subscribe</SubscribeButton>
+            <SubscribeButton onPress={onSubscribe}>Subscribe</SubscribeButton>
         </Container>
     );
 }

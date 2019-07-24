@@ -57,6 +57,14 @@ export default function Meetups() {
         setDate(addDays(date, 1));
     }
 
+    async function handleSubscribe(meetup_id) {
+        const response = await api.post('subscriptions', {
+            params: {
+                meetup_id,
+            },
+        });
+    }
+
     return (
         <Background>
             <Header>
@@ -80,11 +88,21 @@ export default function Meetups() {
                     <List
                         data={meetups}
                         keyExtractor={item => String(item.id)}
-                        renderItem={({ item }) => <Meetup data={item} />}
+                        renderItem={({ item }) => (
+                            <Meetup
+                                data={item}
+                                onSubscrible={() => handleSubscribe(item.id)}
+                            />
+                        )}
                     />
                 ) : (
                     <EmptyContainer>
-                        <Icon name="sentiment-dissatisfied" size={20} color="#999" style={{ marginRight: 5 }} />
+                        <Icon
+                            name="sentiment-dissatisfied"
+                            size={20}
+                            color="#999"
+                            style={{ marginRight: 5 }}
+                        />
                         <Text>No meetups found on this date</Text>
                     </EmptyContainer>
                 )}
