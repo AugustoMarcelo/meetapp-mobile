@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Text, Image, TouchableOpacity } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -20,10 +21,14 @@ import {
     DateSelectorText,
 } from './styles';
 
+import { subscribeRequest } from '~/store/modules/subscription/actions';
+
 export default function Meetups() {
     const [date, setDate] = useState(new Date());
     const [page, setPage] = useState(1);
     const [meetups, setMeetups] = useState([]);
+
+    const dispatch = useDispatch();
 
     const dateFormatted = useMemo(
         () => format(date, "d 'de' MMMM", { locale: pt }),
@@ -57,10 +62,8 @@ export default function Meetups() {
         setDate(addDays(date, 1));
     }
 
-    async function handleSubscribe(meetup_id) {
-        await api.post('subscriptions', {
-            meetup_id,
-        });
+    function handleSubscribe(meetup_id) {
+        dispatch(subscribeRequest(meetup_id));
     }
 
     return (

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -14,6 +15,8 @@ import {
 } from './styles';
 
 export default function Meetup({ data, onSubscribe }) {
+    const loading = useSelector(state => state.subscription.loading);
+
     const dateFormatted = useMemo(() => {
         return formatRelative(parseISO(data.date), new Date(), {
             locale: pt,
@@ -45,7 +48,9 @@ export default function Meetup({ data, onSubscribe }) {
                     <InfoText>Organizador: {data.user.name}</InfoText>
                 </Info>
             </InfoContainer>
-            <SubscribeButton onPress={onSubscribe}>Subscribe</SubscribeButton>
+            <SubscribeButton loading={loading} onPress={onSubscribe}>
+                Subscribe
+            </SubscribeButton>
         </Container>
     );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Text, Image } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -12,8 +13,12 @@ import Subscription from '~/components/Subscription';
 
 import { Header, Container, EmptyContainer, List } from './styles';
 
+import { cancelSubscribe } from '~/store/modules/subscription/actions';
+
 export default function Subscriptions() {
     const [subscriptions, setSubscriptions] = useState([]);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function loadSubscriptions() {
@@ -25,12 +30,8 @@ export default function Subscriptions() {
         loadSubscriptions();
     }, []);
 
-    async function handleCancelSubscribe(meetup_id) {
-        await api.delete('subscriptions', {
-            params: {
-                meetup_id,
-            },
-        });
+    async function handleCancelSubscribe(id) {
+        dispatch(cancelSubscribe(id));
     }
 
     return (

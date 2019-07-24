@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 import { parseISO, formatRelative } from 'date-fns';
@@ -15,6 +16,8 @@ import {
 } from './styles';
 
 export default function Subscription({ data, onCancel }) {
+    const loading = useSelector(state => state.subscription.loading);
+
     const dateFormatted = useMemo(() => {
         return formatRelative(parseISO(data.date), new Date(), {
             locale: pt,
@@ -46,7 +49,7 @@ export default function Subscription({ data, onCancel }) {
                     <InfoText>Organizador: {data.user.name}</InfoText>
                 </Info>
             </InfoContainer>
-            <CancelSubscribeButton onPress={onCancel}>
+            <CancelSubscribeButton loading={loading} onPress={onCancel}>
                 Cancel subscribe
             </CancelSubscribeButton>
         </Container>
