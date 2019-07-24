@@ -58,10 +58,8 @@ export default function Meetups() {
     }
 
     async function handleSubscribe(meetup_id) {
-        const response = await api.post('subscriptions', {
-            params: {
-                meetup_id,
-            },
+        await api.post('subscriptions', {
+            meetup_id,
         });
     }
 
@@ -91,7 +89,7 @@ export default function Meetups() {
                         renderItem={({ item }) => (
                             <Meetup
                                 data={item}
-                                onSubscrible={() => handleSubscribe(item.id)}
+                                onSubscribe={() => handleSubscribe(item.id)}
                             />
                         )}
                     />
