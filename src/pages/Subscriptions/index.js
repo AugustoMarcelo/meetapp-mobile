@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Text, Image } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -15,20 +16,22 @@ import { Header, Container, EmptyContainer, List } from './styles';
 
 import { cancelSubscribe } from '~/store/modules/subscription/actions';
 
-export default function Subscriptions() {
+function Subscriptions({ isFocused }) {
     const [subscriptions, setSubscriptions] = useState([]);
 
     const dispatch = useDispatch();
 
+    async function loadSubscriptions() {
+        const response = await api.get('mysubscriptions');
+
+        setSubscriptions(response.data);
+    }
+
     useEffect(() => {
-        async function loadSubscriptions() {
-            const response = await api.get('mysubscriptions');
-
-            setSubscriptions(response.data);
+        if (isFocused) {
+            loadSubscriptions();
         }
-
-        loadSubscriptions();
-    }, []);
+    }, [isFocused]);
 
     async function handleCancelSubscribe(id) {
         dispatch(cancelSubscribe(id));
@@ -73,3 +76,5 @@ Subscriptions.navigationOptions = {
         <Icon name="local-offer" size={20} color={tintColor} />
     ),
 };
+
+export default withNavigationFocus(Subscriptions);
