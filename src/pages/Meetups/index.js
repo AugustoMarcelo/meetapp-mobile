@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Text, Image, TouchableOpacity } from 'react-native';
 import { format, subDays, addDays } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '~/services/api';
@@ -44,7 +45,7 @@ export default function Meetups() {
             const response = await api.get('meetups', {
                 params: {
                     date: dateParamFormatted,
-                    page,
+                    page: 1,
                 },
             });
 
@@ -52,7 +53,20 @@ export default function Meetups() {
         }
 
         loadMeetups();
-    }, [date, dateParamFormatted, page]);
+    }, [date, dateParamFormatted]);
+
+    async function loadMore() {
+        const response = await api.get('meetups', {
+            params: {
+                date: dateParamFormatted,
+                page: page + 1,
+            },
+        });
+
+        if (response.data) {
+            setPage(page + 1);
+        }
+    }
 
     function handlePrevDay() {
         setDate(subDays(date, 1));
@@ -87,6 +101,8 @@ export default function Meetups() {
                 </DateSelector>
                 {meetups.length ? (
                     <List
+                        onEndReachedThreshold={0.2}
+                        onEndReached={loadMore}
                         data={meetups}
                         keyExtractor={item => String(item.id)}
                         renderItem={({ item }) => (
@@ -112,9 +128,15 @@ export default function Meetups() {
     );
 }
 
+const tabBarIcon = ({ tintColor }) => (
+    <Icon name="format-list-bulleted" size={20} color={tintColor} />
+);
+
+tabBarIcon.propTypes = {
+    tintColor: PropTypes.string.isRequired,
+};
+
 Meetups.navigationOptions = {
     tabBarLabel: 'Meetups',
-    tabBarIcon: ({ tintColor }) => (
-        <Icon name="format-list-bulleted" size={20} color={tintColor} />
-    ),
+    tabBarIcon,
 };

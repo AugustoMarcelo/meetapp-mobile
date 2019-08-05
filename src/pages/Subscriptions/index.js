@@ -70,11 +70,21 @@ function Subscriptions({ isFocused }) {
     );
 }
 
+const tabBarIcon = ({ tintColor }) => (
+    <Icon name="local-offer" size={20} color={tintColor} />
+);
+
+tabBarIcon.propTypes = {
+    tintColor: PropTypes.string.isRequired,
+};
+
+Subscriptions.propTypes = {
+    isFocused: PropTypes.bool.isRequired,
+};
+
 Subscriptions.navigationOptions = {
     tabBarLabel: 'Subscriptions',
-    tabBarIcon: ({ tintColor }) => (
-        <Icon name="local-offer" size={20} color={tintColor} />
-    ),
+    tabBarIcon,
 };
 
 export default withNavigationFocus(Subscriptions);
