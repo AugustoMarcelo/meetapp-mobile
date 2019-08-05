@@ -21,3 +21,9 @@ The user can see the your meetup subscriptions or cancel it.
 
 ### Profile
 The user can edit your registered informations. All fields are validated.
+
+### Running application
+
+- To run the application, you must execute the command `yarn`. It will install all the necessary dependencies for the application execution;
+- This application access a backend that you can find <a href="https://github.com/AugustoMarcelo/meetapp">Here</a>.
+- Thus, just run the command `react-native run-android` start to run the application.
