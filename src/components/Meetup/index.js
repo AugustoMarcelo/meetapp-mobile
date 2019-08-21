@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { parseISO, formatRelative } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import PropTypes from 'prop-types';
 
 import {
     Container,
@@ -54,3 +55,14 @@ export default function Meetup({ data, onSubscribe }) {
         </Container>
     );
 }
+
+Meetup.propTypes = {
+    data: PropTypes.shape({
+        user: PropTypes.object.isRequired,
+        banner: PropTypes.object.isRequired,
+        title: PropTypes.string.isRequired,
+        location: PropTypes.string.isRequired,
+        date: PropTypes.string.isRequired,
+    }).isRequired,
+    onSubscribe: PropTypes.func.isRequired,
+};
