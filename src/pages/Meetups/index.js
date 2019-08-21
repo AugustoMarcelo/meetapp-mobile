@@ -20,6 +20,7 @@ import {
     List,
     DateSelector,
     DateSelectorText,
+    Loading,
 } from './styles';
 
 import { subscribeRequest } from '~/store/modules/subscription/actions';
@@ -28,6 +29,8 @@ export default function Meetups() {
     const [date, setDate] = useState(new Date());
     const [page, setPage] = useState(1);
     const [meetups, setMeetups] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -49,13 +52,20 @@ export default function Meetups() {
                 },
             });
 
-            setMeetups(response.data);
+            setPage(1);
+            setMeetups(response.data.rows);
+            // Quantidade total de registros encontrados
+            setTotal(response.data.count);
         }
 
         loadMeetups();
     }, [date, dateParamFormatted]);
 
     async function loadMore() {
+        if (total && meetups.length === total) return;
+
+        setLoading(true);
+
         const response = await api.get('meetups', {
             params: {
                 date: dateParamFormatted,
@@ -63,9 +73,9 @@ export default function Meetups() {
             },
         });
 
-        if (response.data) {
-            setPage(page + 1);
-        }
+        setPage(page + 1);
+        setMeetups([...meetups, ...response.data.rows]);
+        setLoading(false);
     }
 
     function handlePrevDay() {
@@ -105,6 +115,7 @@ export default function Meetups() {
                         onEndReached={loadMore}
                         data={meetups}
                         keyExtractor={item => String(item.id)}
+                        ListFooterComponent={loading && <Loading />}
                         renderItem={({ item }) => (
                             <Meetup
                                 data={item}

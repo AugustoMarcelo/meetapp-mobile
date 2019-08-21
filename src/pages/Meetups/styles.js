@@ -39,3 +39,10 @@ export const DateSelectorText = styled.Text`
     color: #fff;
     font-weight: bold;
 `;
+
+export const Loading = styled.ActivityIndicator.attrs({
+    size: 'small',
+    color: '#999',
+})`
+    margin: 30px 0;
+`;
