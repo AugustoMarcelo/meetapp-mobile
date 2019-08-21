@@ -31,6 +31,7 @@ export default function Meetups() {
     const [meetups, setMeetups] = useState([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -43,21 +44,27 @@ export default function Meetups() {
         date,
     ]);
 
+    async function loadMeetups() {
+        const response = await api.get('meetups', {
+            params: {
+                date: dateParamFormatted,
+                page: 1,
+            },
+        });
+
+        setPage(1);
+        setMeetups(response.data.rows);
+        // Quantidade total de registros encontrados
+        setTotal(response.data.count);
+    }
+
+    // Hook chamado ao inicializar o componente
     useEffect(() => {
-        async function loadMeetups() {
-            const response = await api.get('meetups', {
-                params: {
-                    date: dateParamFormatted,
-                    page: 1,
-                },
-            });
+        loadMeetups();
+    }, []);
 
-            setPage(1);
-            setMeetups(response.data.rows);
-            // Quantidade total de registros encontrados
-            setTotal(response.data.count);
-        }
-
+    // Hook chamado sempre que o usuário mudar a data de pequisa
+    useEffect(() => {
         loadMeetups();
     }, [date, dateParamFormatted]);
 
@@ -76,6 +83,12 @@ export default function Meetups() {
         setPage(page + 1);
         setMeetups([...meetups, ...response.data.rows]);
         setLoading(false);
+    }
+
+    async function refreshList() {
+        setRefreshing(true);
+        await loadMeetups();
+        setRefreshing(false);
     }
 
     function handlePrevDay() {
@@ -115,6 +128,8 @@ export default function Meetups() {
                         onEndReached={loadMore}
                         data={meetups}
                         keyExtractor={item => String(item.id)}
+                        onRefresh={refreshList}
+                        refreshing={refreshing}
                         ListFooterComponent={loading && <Loading />}
                         renderItem={({ item }) => (
                             <Meetup
