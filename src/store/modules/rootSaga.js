@@ -6,5 +6,5 @@ import meetup from './meetup/sagas';
 import subscription from './subscription/sagas';
 
 export default function* rootSaga() {
-    return yield all([auth, user, meetup, subscription]);
+  return yield all([auth, user, meetup, subscription]);
 }

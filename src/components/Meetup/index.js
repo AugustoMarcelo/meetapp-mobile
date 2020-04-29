@@ -6,63 +6,63 @@ import pt from 'date-fns/locale/pt';
 import PropTypes from 'prop-types';
 
 import {
-    Container,
-    Banner,
-    Title,
-    InfoContainer,
-    Info,
-    InfoText,
-    SubscribeButton,
+  Container,
+  Banner,
+  Title,
+  InfoContainer,
+  Info,
+  InfoText,
+  SubscribeButton,
 } from './styles';
 
 export default function Meetup({ data, onSubscribe }) {
-    const loading = useSelector(state => state.subscription.loading);
+  const loading = useSelector((state) => state.subscription.loading);
 
-    const dateFormatted = useMemo(() => {
-        return formatRelative(parseISO(data.date), new Date(), {
-            locale: pt,
-            addSuffix: true,
-        });
-    }, [data.date]);
+  const dateFormatted = useMemo(() => {
+    return formatRelative(parseISO(data.date), new Date(), {
+      locale: pt,
+      addSuffix: true,
+    });
+  }, [data.date]);
 
-    return (
-        <Container>
-            <Banner
-                source={{
-                    uri: data.banner.url
-                        ? data.banner.url
-                        : 'https://camunda.com/img/events/meetup-example.jpg',
-                }}
-            />
-            <Title>{data.title}</Title>
-            <InfoContainer>
-                <Info>
-                    <Icon name="event" size={18} color="#999" />
-                    <InfoText>{dateFormatted}</InfoText>
-                </Info>
-                <Info>
-                    <Icon name="place" size={18} color="#999" />
-                    <InfoText>{data.location}</InfoText>
-                </Info>
-                <Info>
-                    <Icon name="person" size={18} color="#999" />
-                    <InfoText>Organizador: {data.user.name}</InfoText>
-                </Info>
-            </InfoContainer>
-            <SubscribeButton loading={loading} onPress={onSubscribe}>
-                Subscribe
-            </SubscribeButton>
-        </Container>
-    );
+  return (
+    <Container>
+      <Banner
+        source={{
+          uri: data.banner.url
+            ? data.banner.url
+            : 'https://camunda.com/img/events/meetup-example.jpg',
+        }}
+      />
+      <Title>{data.title}</Title>
+      <InfoContainer>
+        <Info>
+          <Icon name="event" size={18} color="#999" />
+          <InfoText>{dateFormatted}</InfoText>
+        </Info>
+        <Info>
+          <Icon name="place" size={18} color="#999" />
+          <InfoText>{data.location}</InfoText>
+        </Info>
+        <Info>
+          <Icon name="person" size={18} color="#999" />
+          <InfoText>Organizador: {data.user.name}</InfoText>
+        </Info>
+      </InfoContainer>
+      <SubscribeButton loading={loading} onPress={onSubscribe}>
+        Subscribe
+      </SubscribeButton>
+    </Container>
+  );
 }
 
 Meetup.propTypes = {
-    data: PropTypes.shape({
-        user: PropTypes.object.isRequired,
-        banner: PropTypes.object.isRequired,
-        title: PropTypes.string.isRequired,
-        location: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-    }).isRequired,
-    onSubscribe: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    user: PropTypes.object.isRequired,
+    banner: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+  }).isRequired,
+  onSubscribe: PropTypes.func.isRequired,
 };
